@@ -20,6 +20,7 @@ def status():
     #Пользователи хранятся в list
     #Также мой сервер проверяет на отличие username при входе в чат.Если username был использован,он просит
     # ввести username заново
+    #full server code: https://github.com/computerbox124/Hey-Hajiyevs/blob/master/server.py
     dt = datetime.now()
     return {
         'status': True,
