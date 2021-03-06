@@ -1,3 +1,5 @@
+from typing import Any
+
 import time
 from datetime import datetime
 
@@ -5,7 +7,7 @@ from flask import Flask, request, abort
 
 app = Flask(__name__)
 messages = []
-
+users = []
 
 @app.route("/")
 def hello():
@@ -14,16 +16,21 @@ def hello():
 
 @app.route("/status")
 def status():
+    #Я добавил параметр username для того чтобы определить точное количество участников. Имен может быть много.
+    #Пользователи хранятся в list
+    #Также мой сервер проверяет на отличие username при входе в чат.Если username был использован,он просит
+    # ввести username заново
     dt = datetime.now()
     return {
         'status': True,
-        'name': 'Skillbox Messenger',
+        'name': 'Hajiyevs Messenger',
         'time': time.time(),
         'time1': time.asctime(),
         'time2': dt,
         'time3': str(dt),
         'time4': dt.isoformat(),
         'time5': dt.strftime('%d %b %H:%M:%S'),
+        'username_count': 'At the moment there are ' + str(len(users)) + ' users online.'
     }
 
 
@@ -35,9 +42,27 @@ def send_message():
 
     name = data.get('name')
     text = data.get('text')
+    username = data.get('username')
+    status = data.get('status')
 
     if not isinstance(name, str) or len(name) == 0:
         return abort(400)
+
+    if not isinstance(username, str) or len(username) == 0:
+        return abort(400)
+
+    if not isinstance(status, str) or len(status) == 0:
+        return abort(400)
+
+    if username in users and status == 'login':
+        return {'status': 'User with such username was created!'}
+
+    if status == 'login':
+        users.append(username)
+        return {'status': 'Ok'}
+    elif status == 'logout':
+        users.remove(username)
+        return {'status': 'Ok'}
 
     if not isinstance(text, str) or \
             len(text) == 0 or len(text) > 1000:
@@ -46,11 +71,12 @@ def send_message():
     message = {
         'name': name,
         'text': text,
-        'time': time.time()
+        'time': time.time(),
+        'username': username
     }
     messages.append(message)
 
-    return {'ok': True}
+    return {'status':'Ok'}
 
 
 @app.route("/messages")
