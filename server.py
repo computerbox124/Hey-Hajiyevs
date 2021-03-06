@@ -38,8 +38,10 @@ def status():
 @app.route("/send", methods=['POST'])
 def send_message():
     data = request.json
+    print(data)
+    print(type(data))
     if not isinstance(data, dict):
-        return abort(400)
+        return abort(401)
 
     name = data.get('name')
     text = data.get('text')
