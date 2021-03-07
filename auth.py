@@ -1,5 +1,5 @@
 from support import *
-#import menu
+import chat
 
 
 def main():
@@ -36,7 +36,7 @@ def authentication():
 
     data = response.json()
     if data['status'] == 'Ok':
-        pass
+        chat.main(name_info,username_info)
     else:
         messagebox.showinfo("Error!","That username was used! Input your username again!")
         return

@@ -16,7 +16,7 @@ def hello():
 
 @app.route("/status")
 def status():
-    #Я добавил параметр username для того чтобы определить точное количество участников. Имен может быть много.
+    #Я добавил параметр username для того чтобы определить точное количество участников.Одинаковых имен может быть много.
     #Пользователи хранятся в list
     #Также мой сервер проверяет на отличие username при входе в чат.Если username был использован,он просит
     # ввести username заново
@@ -38,10 +38,8 @@ def status():
 @app.route("/send", methods=['POST'])
 def send_message():
     data = request.json
-    print(data)
-    print(type(data))
     if not isinstance(data, dict):
-        return abort(401)
+        return abort(400)
 
     name = data.get('name')
     text = data.get('text')
